@@ -2,9 +2,9 @@
 import React from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import { signIn } from "next-auth/react";
-import ROUTES from "@/routes/routes";
+import ROUTES from "@/constants/routes";
 
 const SocialAuth = () => {
   const buttonClass = `background-dark400_light900 body-medium 

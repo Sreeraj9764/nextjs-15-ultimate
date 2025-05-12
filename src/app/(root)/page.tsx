@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import ROUTES from "@/routes/routes";
+import ROUTES from "@/constants/routes";
 
 const Home = async () => {
   const response = await fetch("https://jsonplaceholder.typicode.com/albums");
@@ -36,7 +36,7 @@ const Home = async () => {
             <h2 className="h2-bold">{album.title}</h2>
           </div>
         ))}
-        <form
+        {/* <form
           action={async () => {
             "use server";
             await signOut({ redirectTo: ROUTES.SIGN_IN });
@@ -44,7 +44,7 @@ const Home = async () => {
           className="pr-10"
         >
           <Button type="submit">Log Out</Button>
-        </form>
+        </form> */}
       </div>
     </main>
   );
