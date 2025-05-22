@@ -5,7 +5,7 @@ import Theme from "./Theme";
 import MobileNavigation from "./MobileNavigation";
 const NavBar = () => {
   return (
-    <nav className="flex-between gap-5 background-light900_dark200 fixed z-50 w-full p-6 shadow-light-300 dark:shadow-none sm:px-12">
+    <nav className="flex-between fixed gap-5 background-light900_dark200  top-0 z-50 w-full p-6 shadow-light-300 dark:shadow-none sm:px-12">
       <Link href="/" className="flex items-center gap-1">
         <Image
           src="images/site-logo.svg"

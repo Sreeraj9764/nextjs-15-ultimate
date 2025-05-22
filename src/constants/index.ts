@@ -1,3 +1,5 @@
+import ROUTES from "./routes";
+
 export const sidebarLinks = [
   {
     imgURL: "/icons/home.svg",
@@ -33,5 +35,18 @@ export const sidebarLinks = [
     imgURL: "/icons/question.svg",
     route: "/ask-question",
     label: "Ask a question",
+  },
+];
+
+export const authLinks = [
+  {
+    imgURL: "/icons/account.svg",
+    route: `${ROUTES.SIGN_IN}`,
+    label: "Log In",
+  },
+  {
+    imgURL: "/icons/sign-up.svg",
+    route: `${ROUTES.SIGN_UP}`,
+    label: "Sign Up",
   },
 ];

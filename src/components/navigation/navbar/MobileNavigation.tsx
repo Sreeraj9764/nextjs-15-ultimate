@@ -14,6 +14,7 @@ import ROUTES from "@/constants/routes";
 import { Button } from "@/components/ui/button";
 import { Span } from "next/dist/trace";
 import NavLinks from "./NavLinks";
+import AuthLinks from "../AuthLinks";
 
 const MobileNavigation = () => {
   return (
@@ -61,7 +62,7 @@ const MobileNavigation = () => {
           className="flex
         flex-col gap-3"
         >
-          <SheetClose asChild>
+          {/* <SheetClose asChild>
             <Link href={ROUTES.SIGN_IN}>
               <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3">
                 <span className="primary-text-gradient"> Log In</span>
@@ -74,7 +75,8 @@ const MobileNavigation = () => {
                 Sign up
               </Button>
             </Link>
-          </SheetClose>
+          </SheetClose> */}
+          <AuthLinks isMobileNav />
         </div>
       </SheetContent>
     </Sheet>
