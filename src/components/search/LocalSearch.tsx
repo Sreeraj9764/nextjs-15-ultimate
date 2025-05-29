@@ -20,23 +20,26 @@ const LocalSearch = ({ imgSrc, placeholder, otherClassName, route }: Props) => {
   const [searchQuery, setSearchQuery] = useState(query);
 
   useEffect(() => {
-    const paramsString = searchParams.toString();
-    var newurl = "";
-    if (searchQuery) {
-      newurl = formUrlQuery({
-        params: paramsString,
-        key: "query",
-        value: searchQuery,
-      });
-    } else {
-      if (pathName === route) {
-        newurl = removeUrlQuery({
+    const debounceFunction = setTimeout(() => {
+      const paramsString = searchParams.toString();
+      var newurl = "";
+      if (searchQuery) {
+        newurl = formUrlQuery({
           params: paramsString,
-          keysToRemove: ["query"],
+          key: "query",
+          value: searchQuery,
         });
+      } else {
+        if (pathName === route) {
+          newurl = removeUrlQuery({
+            params: paramsString,
+            keysToRemove: ["query"],
+          });
+        }
       }
-    }
-    router.push(newurl, { scroll: false });
+      router.push(newurl, { scroll: false });
+    }, 1000);
+    return () => clearTimeout(debounceFunction);
   }, [searchQuery, route, router, searchParams, pathName]);
 
   return (
