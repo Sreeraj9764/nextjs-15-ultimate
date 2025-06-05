@@ -1,4 +1,5 @@
 import { auth, signOut } from "@/auth";
+import HomeFilter from "@/components/filters/HomeFilter";
 import LocalSearch from "@/components/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
@@ -11,7 +12,7 @@ const questions = [
     description: "I want to learn React, can anyone help me?",
     tags: [
       { _id: "1", name: "React" },
-      { _id: "2", name: "JavaScript" },
+      // { _id: "2", name: "JavaScript" },
     ],
     author: { _id: "1", name: "John Doe" },
     upvotes: 10,
@@ -24,7 +25,7 @@ const questions = [
     title: "How to learn JavaScript?",
     description: "I want to learn JavaScript, can anyone help me?",
     tags: [
-      { _id: "1", name: "React" },
+      // { _id: "1", name: "React" },
       { _id: "2", name: "JavaScript" },
     ],
     author: { _id: "1", name: "John Doe" },
@@ -40,10 +41,52 @@ interface SearchParams {
 }
 
 const Home = async ({ searchParams }: SearchParams) => {
-  const { query = "" } = await searchParams;
-  const filteredQuestions = questions.filter((q) =>
-    q.title.toLowerCase().includes(query?.toLocaleLowerCase())
-  );
+  const { query = "", filter = "" } = await searchParams;
+  let processedQuestions = [...questions]; // Start with a copy of all questions
+
+  // 1. Filter by search query (if provided)
+  if (query) {
+    processedQuestions = processedQuestions.filter((question) =>
+      question.title.toLowerCase().includes(query.toLowerCase())
+    );
+  }
+
+  // 2. Apply the selected filter (if provided)
+  if (filter) {
+    switch (filter) {
+      case "react":
+        processedQuestions = processedQuestions.filter((question) =>
+          question.tags.some((tag) => tag.name.toLowerCase() === filter)
+        );
+        break;
+      case "javascript":
+        // Filter by tag name (case-insensitive)
+        processedQuestions = processedQuestions.filter((question) =>
+          question.tags.some((tag) => tag.name.toLowerCase() === filter)
+        );
+        break;
+      case "newest":
+        processedQuestions.sort(
+          (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+        );
+        break;
+      case "popular":
+        // Assuming higher upvotes means more popular. Could also consider views.
+        processedQuestions.sort((a, b) => b.upvotes - a.upvotes);
+        break;
+      case "unanswered":
+        processedQuestions = processedQuestions.filter(
+          (question) => question.answers === 0
+        );
+        break;
+      case "recommended":
+        // Placeholder: Implement logic for recommended questions.
+        // This might involve more complex algorithms or user-specific data.
+        break;
+    }
+  }
+  const filteredQuestions = processedQuestions;
+
   return (
     <>
       <section
@@ -67,7 +110,7 @@ const Home = async ({ searchParams }: SearchParams) => {
           route="/"
         />
       </section>
-      Home filter
+      <HomeFilter />
       <div className="mt-10 flex flex-col w-full gap-6">
         {filteredQuestions.map((question) => (
           <h1 key={question._id}>{question.title}</h1>
