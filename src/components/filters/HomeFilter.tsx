@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { formUrlQuery, removeUrlQuery } from "@/lib/url";
 import { cn } from "@/lib/utils";
+import { useQueryState } from "nuqs";
 
 const filters = [
   { name: "React", value: "react" },
@@ -19,26 +20,34 @@ const HomeFilter = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   // const query = searchParams.get("filter") || "";
-  const [filterQuery, setFilterQuery] = useState("");
-
+  // const [filterQuery, setFilterQuery] = useState("");
+const [filterQuery, setQuery] = useQueryState('filter',{
+  defaultValue: '',
+  shallow: false,
+})
   const onClick = (filter: string) => {
-    const paramsString = searchParams.toString();
-    let newurl = "";
     if (filter === filterQuery) {
-      setFilterQuery("");
-      newurl = removeUrlQuery({
-        params: paramsString,
-        keysToRemove: ["filter"],
-      });
+      setQuery('');
     } else {
-      setFilterQuery(filter);
-      newurl = formUrlQuery({
-        params: paramsString,
-        key: "filter",
-        value: filter,
-      });
+      setQuery(filter);
     }
-    router.push(newurl, { scroll: false });
+    // const paramsString = searchParams.toString();
+    // let newurl = "";
+    // if (filter === filterQuery) {
+    //   setFilterQuery("");
+    //   newurl = removeUrlQuery({
+    //     params: paramsString,
+    //     keysToRemove: ["filter"],
+    //   });
+    // } else {
+    //   setFilterQuery(filter);
+    //   newurl = formUrlQuery({
+    //     params: paramsString,
+    //     key: "filter",
+    //     value: filter,
+    //   });
+    // }
+    // router.push(newurl, { scroll: false });
   };
 
   return (

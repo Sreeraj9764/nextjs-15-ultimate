@@ -466,7 +466,7 @@
   /* Component utilities */
   .card-wrapper {
     background-color: theme("colors.light.900");
-    box-shadow: theme("boxShadow.light.100");
+    box-shadow: theme("shadow.light.100");
   }
 
   .dark .card-wrapper {
@@ -475,7 +475,7 @@
       rgba(23, 28, 35, 0.41) 0%,
       rgba(19, 22, 28, 0.7) 100%
     );
-    box-shadow: theme("boxShadow.dark.100");
+    box-shadow: theme("shadow.dark.100");
   }
 
   .btn {
