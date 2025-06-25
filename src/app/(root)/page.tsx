@@ -15,11 +15,16 @@ const questions = [
       { _id: "1", name: "React" },
       // { _id: "2", name: "JavaScript" },
     ],
-    author: { _id: "1", name: "John Doe" },
-    upvotes: 10,
+    author: {
+      _id: "1",
+      name: "John Doe",
+      image:
+        "https://www.svgrepo.com/show/384670/account-avatar-profile-user.svg",
+    },
+    upvotes: 15,
     answers: 5,
     views: 100,
-    createdAt: new Date(),
+    createdAt: new Date("2023-01-15T10:00:00Z"),
   },
   {
     _id: "2",
@@ -29,11 +34,16 @@ const questions = [
       // { _id: "1", name: "React" },
       { _id: "2", name: "JavaScript" },
     ],
-    author: { _id: "1", name: "John Doe" },
-    upvotes: 10,
+    author: {
+      _id: "1",
+      name: "John Doe",
+      image:
+        "https://img.freepik.com/premium-vector/person-with-blue-shirt-that-says-name-person_1029948-7040.jpg?semt=ais_hybrid&w=740",
+    },
+    upvotes: 8,
     answers: 5,
     views: 100,
-    createdAt: new Date(),
+    createdAt: new Date("2025-06-25T11:17:00Z"),
   },
 ];
 

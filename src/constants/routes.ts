@@ -5,6 +5,7 @@ const ROUTES = {
   QUESTIONS: (id: string) => `/questiones/${id}`,
   ASK_QUESTION: `/ask-questione`,
   TAGS: (id: string) => `/tags/${id}`,
+  PROFILE: (id: string) => `/profile/${id}`,
 };
 
 export default ROUTES;

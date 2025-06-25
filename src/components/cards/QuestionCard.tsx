@@ -1,4 +1,9 @@
+import ROUTES from "@/constants/routes";
+import { getTimestamb } from "@/lib/utils";
+import Link from "next/link";
 import React from "react";
+import TagCard from "./TagCard";
+import Metric from "../Metric";
 
 interface Props {
   question: Question;
@@ -12,10 +17,63 @@ const QuestionCard = ({ question: { ...rest } }: Props) => {
          justify-between gap-5 sm:flex-row"
       >
         <div>
-          <span>{String(rest.createdAt)}</span>
+          <span
+            className="subtle-regular text-dark400_light700 line-clamp-1 
+          flex sm:hidden"
+          >
+            {getTimestamb(rest.createdAt)}
+          </span>
+
+          <Link href={ROUTES.QUESTIONS(rest._id)}>
+            <h3
+              className="sm:h3-semibold base-semibold text-dark200_light900
+        line-clamp-1 flex-1"
+            >
+              {rest.title}
+            </h3>
+          </Link>
         </div>
       </div>
-      <div>{rest.title}</div>
+      <div className="mt-3.5 flex flex-wrap gap-2 w-full">
+        {rest.tags.map((tag) => (
+          <TagCard key={tag._id} {...tag} />
+        ))}
+      </div>
+      <div className="flex-between mt-6 w-full flex-wrap gap-3">
+        <Metric
+          imgUrl={rest.author.image}
+          alt={rest.author.name}
+          value={rest.author.name}
+          title={`• asked ${getTimestamb(rest.createdAt)}`}
+          href={ROUTES.PROFILE(rest.author._id)}
+          textStyles="body-medium text-dark400_light700"
+          isAuthor
+        />
+
+        <div className="flex items-center gap-3 max-sm:flex-wrap max-sm:justify-start">
+          <Metric
+            imgUrl="/icons/like.svg"
+            alt="like"
+            value={rest.upvotes}
+            title=" Votes"
+            textStyles="small-medium text-dark400_light800"
+          />
+          <Metric
+            imgUrl="/icons/message.svg"
+            alt="answers"
+            value={rest.answers}
+            title=" Answers"
+            textStyles="small-medium text-dark400_light800"
+          />
+          <Metric
+            imgUrl="/icons/eye.svg"
+            alt="views"
+            value={rest.views}
+            title=" Views"
+            textStyles="small-medium text-dark400_light800"
+          />
+        </div>
+      </div>
     </div>
   );
 };
