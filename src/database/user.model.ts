@@ -5,7 +5,7 @@ interface IUser {
   username: string;
   email: string;
   bio?: string;
-  image: string;
+  image?: string;
   location?: string;
   portfolio?: string;
   reputation?: number;
@@ -19,7 +19,7 @@ const UserSchema = new Schema<IUser>(
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     bio: { type: String },
-    image: { type: String, required: true },
+    image: { type: String },
     location: { type: String },
     portfolio: { type: String },
     reputation: { type: Number, default: 0 },
@@ -29,6 +29,6 @@ const UserSchema = new Schema<IUser>(
   }
 );
 
-const User = models?.user || model<IUser>("User", UserSchema);
+const User = models?.User || model<IUser>("User", UserSchema);
 
 export default User;

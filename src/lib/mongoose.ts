@@ -1,10 +1,10 @@
 import mongoose, { Mongoose } from "mongoose";
 import logger from "./logger";
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI as string;
 
 if (!MONGODB_URI) {
-  throw new Error("No mongo db connected");
+  throw new Error("MONGODB_URI is not defined");
 }
 
 interface MongooseCache {
@@ -37,7 +37,6 @@ const dbConnect = async (): Promise<Mongoose> => {
       })
       .catch((error) => {
         logger.error("Error connecting to MongoDB", error);
-        console.log(error);
         throw error;
       });
   }
