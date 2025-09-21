@@ -12,32 +12,34 @@ type ActionOptions<T> = {
   authorize?: boolean;
 };
 
-export async function Action<T>({
+async function action<T>({
   params,
   schema,
-  authorize,
+  authorize = false,
 }: ActionOptions<T>) {
   if (schema && params) {
-    schema.parse(params);
     try {
+      schema.parse(params);
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new ValidationError(
+        return new ValidationError(
           error.flatten().fieldErrors as Record<string, string[]>
         );
       }
-      throw new Error("Schema validation error occurred");
+      return new Error("Schema validation error occurred");
     }
-
-    let session: Session | null = null;
-
-    if (authorize) {
-      session = await auth();
-      if (!session) {
-        throw new UnauthorizedError("User is not authenticated");
-      }
-    }
-    await dbConnect();
-    return { params, session };
   }
+
+  let session: Session | null = null;
+
+  if (authorize) {
+    session = await auth();
+    if (!session) {
+      return new UnauthorizedError("User is not authenticated");
+    }
+  }
+  await dbConnect();
+  return { params, session };
 }
+
+export default action;

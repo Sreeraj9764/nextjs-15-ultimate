@@ -1,30 +1,33 @@
+"use server";
+
 import { ActionResponse, ErrorResponse } from "../../../types/global";
 import { SignUpSchema } from "../validations";
-import { Action } from "../handlers/action";
 import handleError from "../handlers/error";
 import mongoose from "mongoose";
-import User, { IUser, IUserDocument } from "@/database/user.model";
+import User, { IUserDocument } from "@/database/user.model";
 import bcrypt from "bcryptjs";
 import Account from "@/database/account.model";
 import { signIn } from "@/auth";
+import action from "../handlers/action";
+import logger from "../logger";
 
 export async function signUpWithCredentials(
   params: AuthCredentials
 ): Promise<ActionResponse> {
-  const validationResult = await Action({
+  const validationResult = await action({
     params,
     schema: SignUpSchema,
   });
 
   if (validationResult instanceof Error) {
-    handleError(validationResult) as ErrorResponse;
+    return handleError(validationResult) as ErrorResponse;
   }
 
-  const { name, email, password, username } = validationResult!.params;
+  const { username, name, email, password } = validationResult.params!;
 
   const session = await mongoose.startSession();
   session.startTransaction();
-
+  let committed = false;
   try {
     const existingUser = await User.findOne({ email }).session(session);
     if (existingUser) {
@@ -45,26 +48,31 @@ export async function signUpWithCredentials(
         },
       ],
       { session }
-    )) as IUserDocument[];
+    )) as [IUserDocument];
 
     await Account.create(
-      {
-        userId: newUser._id,
-        type: "credentials",
-        provider: "credentials",
-        providerAccountId: email,
-        password: hachedPassword,
-      },
+      [
+        {
+          userId: newUser._id,
+          name,
+          provider: "credentials",
+          providerAccountId: email,
+          password: hachedPassword,
+        },
+      ],
       { session }
     );
-    await signIn("credential", { email, password, redirect: false });
-
     await session.commitTransaction();
+    committed = true;
+    // Auto sign in after sign up
+    await signIn("credentials", { email, password, redirect: false });
     return { success: true };
   } catch (error) {
-    session.abortTransaction();
+    if (!committed) {
+      await session.abortTransaction();
+    }
     return handleError(error) as ErrorResponse;
   } finally {
-    session.endSession();
+    await session.endSession();
   }
 }
