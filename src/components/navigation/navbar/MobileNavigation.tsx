@@ -15,8 +15,12 @@ import { Button } from "@/components/ui/button";
 import { Span } from "next/dist/trace";
 import NavLinks from "./NavLinks";
 import AuthLinks from "../AuthLinks";
+import { auth, signOut } from "@/auth";
+import { LogOut } from "lucide-react";
 
-const MobileNavigation = () => {
+const MobileNavigation = async () => {
+  const session = await auth();
+  const userId = session?.user?.id;
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -54,7 +58,7 @@ const MobileNavigation = () => {
         >
           <SheetClose asChild>
             <section className="flex h-full flex-col gap-6 pt-16">
-              <NavLinks isMobileNav />
+              <NavLinks isMobileNav userId={userId} />
             </section>
           </SheetClose>
         </div>
@@ -76,7 +80,25 @@ const MobileNavigation = () => {
               </Button>
             </Link>
           </SheetClose> */}
-          <AuthLinks isMobileNav />
+          {userId ? (
+            <form
+              action={async () => {
+                "use server";
+                await signOut();
+              }}
+            >
+              <Button className="base-medium w-fit !bg-transparent cursor-pointer px-4 py-3">
+                <LogOut className="size-5 text-black dark:text-white" />
+                <span className="max-lg:hidden text-dark300_light900 ml-2">
+                  Log out
+                </span>
+              </Button>
+            </form>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <AuthLinks isMobileNav />
+            </div>
+          )}
         </div>
       </SheetContent>
     </Sheet>

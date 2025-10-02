@@ -3,7 +3,12 @@ import Link from "next/link";
 import React from "react";
 import Theme from "./Theme";
 import MobileNavigation from "./MobileNavigation";
-const NavBar = () => {
+import { User } from "lucide-react";
+import UserAvatar from "@/components/UserAvatar";
+import { auth } from "@/auth";
+const NavBar = async () => {
+  const session = await auth();
+  const userId = session?.user?.id;
   return (
     <nav className="flex-between fixed gap-5 background-light900_dark200  top-0 z-50 w-full p-6 shadow-light-300 dark:shadow-none sm:px-12">
       <Link href="/" className="flex items-center gap-1">
@@ -20,7 +25,15 @@ const NavBar = () => {
       <p>Global search</p>
       <div className="flex-between gap-5">
         <Theme />
+        {userId && (
+          <UserAvatar
+            userId={userId}
+            name={session.user?.name!}
+            imageUrl={session.user?.image}
+          />
+        )}
       </div>
+
       <MobileNavigation />
     </nav>
   );

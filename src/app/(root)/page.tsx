@@ -55,8 +55,6 @@ interface SearchParams {
 }
 
 const Home = async ({ searchParams }: SearchParams) => {
-  const session = await auth();
-  console.log("Session:", session);
   const { query = "", filter = "" } = await searchParams;
   let processedQuestions = [...questions]; // Start with a copy of all questions
 

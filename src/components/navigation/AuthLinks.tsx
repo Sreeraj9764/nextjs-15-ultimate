@@ -11,7 +11,7 @@ import Image from "next/image";
 const AuthLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
   const buttons = [
     <Link href={ROUTES.SIGN_IN}>
-      <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3">
+      <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg cursor-pointer px-4 py-3">
         <Image
           src="icons/account.svg"
           width={20}
@@ -32,7 +32,7 @@ const AuthLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
     <Link href={ROUTES.SIGN_UP}>
       <Button
         className=" small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px]
-       w-full rounded-lg px-4 py-3 shadow-none "
+       w-full rounded-lg px-4 py-3 shadow-none cursor-pointer"
       >
         <Image
           src="icons/sign-up.svg"

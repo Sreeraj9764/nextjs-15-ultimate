@@ -1,7 +1,7 @@
 "use server";
 
 import { ActionResponse, ErrorResponse } from "../../../types/global";
-import { SignUpSchema } from "../validations";
+import { SignInSchema, SignUpSchema } from "../validations";
 import handleError from "../handlers/error";
 import mongoose from "mongoose";
 import User, { IUserDocument } from "@/database/user.model";
@@ -9,7 +9,6 @@ import bcrypt from "bcryptjs";
 import Account from "@/database/account.model";
 import { signIn } from "@/auth";
 import action from "../handlers/action";
-import logger from "../logger";
 
 export async function signUpWithCredentials(
   params: AuthCredentials
@@ -74,5 +73,56 @@ export async function signUpWithCredentials(
     return handleError(error) as ErrorResponse;
   } finally {
     await session.endSession();
+  }
+}
+
+export async function signInWithCredentials(
+  params: Pick<AuthCredentials, "email" | "password">
+): Promise<ActionResponse> {
+  const validationResult = await action({
+    params,
+    schema: SignInSchema,
+  });
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  try {
+    const { email, password } = validationResult.params!;
+
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser) {
+      throw new Error("User with this email does not exist");
+    }
+
+    const existingAccount = await Account.findOne({
+      provider: "credentials",
+      providerAccountId: email,
+    });
+
+    if (!existingAccount) {
+      throw new Error("No credentials account found for this email");
+    }
+
+    const isValidPassword = await bcrypt.compare(
+      password,
+      existingAccount.password!
+    );
+
+    if (!isValidPassword) {
+      throw new Error("Invalid password");
+    }
+
+    // Sign in the user
+
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+    return { success: true };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
   }
 }
