@@ -44,3 +44,8 @@ type ErrorResponse = ActionResponse<undefined> & {
 
 type ApiErrorResponse = NextResponse<ErrorResponse>;
 type ApiResponse<T> = NextResponse<SuccessResponse<T>> | ErrorResponse;
+
+interface RouteParams {
+  params: Promise<Record<string, string>>;
+  searchParams: Promise<Record<string, string>>;
+}
