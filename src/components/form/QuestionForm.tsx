@@ -23,7 +23,7 @@ import {
 import { Input } from "../ui/input";
 import { createQuestion } from "@/lib/actions/question.action";
 import ROUTES from "@/constants/routes";
-import router from "next/router";
+import { useRouter } from "next/router";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import { LoaderIcon } from "lucide-react";
@@ -35,6 +35,7 @@ const Editor = dynamic(() => import("@/components/editor"), {
 const QuestionForm = () => {
   const editorRef = useRef<MDXEditorMethods>(null);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof AskQuestionSchema>>({
     resolver: zodResolver(AskQuestionSchema),
@@ -92,7 +93,7 @@ const QuestionForm = () => {
         toast("Success", {
           description: "Question created successfully",
         });
-        redirect(ROUTES.QUESTION(result.data!._id));
+        router.push(ROUTES.QUESTION(result.data!._id));
       } else {
         toast(`Error ${result.status}`, {
           description: result.error?.message,
@@ -194,7 +195,7 @@ const QuestionForm = () => {
           )}
         />
 
-        <div className="mt-16 flex justify-end">
+        <div className="flex justify-end">
           <Button
             type="submit"
             className="primary-gradient w-fit !text-light-900"

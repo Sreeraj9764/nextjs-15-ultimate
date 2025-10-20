@@ -10,14 +10,14 @@ export interface IQuestion {
   upvotes: number;
   downvotes: number;
 }
-export interface IQuestionDocument extends IQuestion, Document<string> {}
+export interface IQuestionDocument extends IQuestion, Document {}
 
 const QuestionSchema = new Schema<IQuestion>(
   {
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     title: { type: String, required: true },
     content: { type: String, required: true },
-    tags: { type: [Schema.Types.ObjectId], required: true, ref: "Tag" },
+    tags: [{ type: Schema.Types.ObjectId, ref: "Tag" }],
     answers: { type: Number, default: 0 },
     views: { type: Number, default: 0 },
     upvotes: { type: Number, default: 0 },
