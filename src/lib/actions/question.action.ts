@@ -7,7 +7,11 @@ import QuestionModel, {
 import { ActionResponse, ErrorResponse, Question } from "../../../types/global";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import { AskQuestionSchema, EditQuestionSchema } from "../validations";
+import {
+  AskQuestionSchema,
+  EditQuestionSchema,
+  GetQuestionSchema,
+} from "../validations";
 import mongoose from "mongoose";
 import Tag from "@/database/tag.model";
 import TagQuestion from "@/database/tag-question.model";
@@ -146,7 +150,32 @@ export async function editQuestion(
         }
       }
     }
-    await TagQuestion.insertMany(newTagDocs, { session });
+    if (tagsToRemove.length > 0) {
+      const tagIdsToRemove = tagsToRemove.map((tag) => tag._id);
+
+      await Tag.updateMany(
+        { _id: { $in: tagIdsToRemove } },
+        { $inc: { questions: -1 } },
+        { session }
+      );
+
+      await TagQuestion.deleteMany(
+        {
+          questionId: question._id,
+          tagId: { $in: tagIdsToRemove },
+        },
+        { session }
+      );
+
+      question.tags = question.tags.filter(
+        (tagId) => !tagIdsToRemove.includes(tagId)
+      );
+    }
+    if (newTagDocs.length > 0) {
+      await TagQuestion.insertMany(newTagDocs, { session });
+    }
+
+    await question.save({ session });
 
     await session.commitTransaction();
     return {
@@ -159,5 +188,39 @@ export async function editQuestion(
     return handleError(error) as ErrorResponse;
   } finally {
     await session.endSession();
+  }
+}
+
+export async function getQuestion(
+  params: GetQuestionParams
+): Promise<ActionResponse<IQuestionDocument>> {
+  const validationResult = await action({
+    params,
+    schema: GetQuestionSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { questionId } = validationResult.params!;
+
+  try {
+    const question =
+      await QuestionModel.findById<IQuestionDocument>(questionId).populate(
+        "tags"
+      );
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(question)),
+      status: 200,
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
   }
 }

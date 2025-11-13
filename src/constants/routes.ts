@@ -7,6 +7,7 @@ const ROUTES = {
   TAGS: (id: string) => `/tags/${id}`,
   PROFILE: (id: string) => `/profile/${id}`,
   QUESTION: (id: string) => `/question/${id}`,
+  EDIT_QUESTION: (id: string) => `/question/${id}/edit`,
 };
 
 export default ROUTES;

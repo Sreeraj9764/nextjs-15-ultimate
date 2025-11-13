@@ -30,9 +30,9 @@ const TagCard = ({
 }: Props) => {
   const iconClass = devIconClassName(name);
 
-  // const handleClick = (e: React.MouseEvent) => {
-  //   e.preventDefault();
-  // };
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+  };
 
   const Content = (
     <>
@@ -62,11 +62,7 @@ const TagCard = ({
 
   if (compact) {
     return isButton ? (
-      <button
-        // onClick={handleClick}
-        className="flex justify-between gap-2"
-        type="button"
-      >
+      <button onClick={handleClick} className="flex justify-between gap-2">
         {Content}
       </button>
     ) : (
