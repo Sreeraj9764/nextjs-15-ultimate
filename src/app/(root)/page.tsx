@@ -1,9 +1,11 @@
 import { auth, signOut } from "@/auth";
 import QuestionCard from "@/components/cards/QuestionCard";
+import DataRenderer from "@/components/DataRenderer";
 import HomeFilter from "@/components/filters/HomeFilter";
 import LocalSearch from "@/components/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
+import { EMPTY_QUESTIONS } from "@/constants/states";
 import { getQuestiones } from "@/lib/actions/question.action";
 import { ValidationError } from "@/lib/http-errors";
 import logger from "@/lib/logger";
@@ -50,7 +52,18 @@ const Home = async ({ searchParams }: SearchParams) => {
         />
       </section>
       <HomeFilter />
-      {success ? (
+      <DataRenderer
+        success={success}
+        error={error}
+        data={questiones}
+        empty={EMPTY_QUESTIONS}
+        render={(questiones) =>
+          questiones.map((question) => (
+            <QuestionCard key={question._id} question={question} />
+          ))
+        }
+      />
+      {/* {success ? (
         <div className="mt-10 flex flex-col w-full gap-6">
           {questiones && questiones.length > 0 ? (
             questiones.map((question) => (
@@ -73,7 +86,7 @@ const Home = async ({ searchParams }: SearchParams) => {
             {error?.message || "Failed to load questions."}
           </p>
         </div>
-      )}
+      )} */}
     </>
   );
 };
