@@ -71,6 +71,15 @@ const TagCard = ({
       </Link>
     );
   }
+
+  return (
+    <Link
+      href={ROUTES.TAGS(_id)}
+      className="shadow-light100_darknone flex w-full flex-col rounded-2xl border border-light-400 bg-light-900 px-8 py-10 dark:border-dark-400 dark:bg-dark-200 sm:w-[260px]"
+    >
+      {Content}
+    </Link>
+  );
 };
 
 export default TagCard;

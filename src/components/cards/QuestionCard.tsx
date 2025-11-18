@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import TagCard from "./TagCard";
 import Metric from "../Metric";
+import { Question } from "../../../types/global";
 
 interface Props {
   question: Question;
@@ -24,7 +25,7 @@ const QuestionCard = ({ question: { ...rest } }: Props) => {
             {getTimestamb(rest.createdAt)}
           </span>
 
-          <Link href={ROUTES.QUESTIONS(rest._id)}>
+          <Link href={ROUTES.QUESTION(rest._id)}>
             <h3
               className="sm:h3-semibold base-semibold text-dark200_light900
         line-clamp-1 flex-1"
@@ -36,7 +37,7 @@ const QuestionCard = ({ question: { ...rest } }: Props) => {
       </div>
       <div className="mt-3.5 flex flex-wrap gap-2 w-full">
         {rest.tags.map((tag) => (
-          <TagCard key={tag._id} {...tag} />
+          <TagCard key={tag._id} _id={tag._id} name={tag.name} compact />
         ))}
       </div>
       <div className="flex-between mt-6 w-full flex-wrap gap-3">

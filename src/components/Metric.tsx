@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 
 interface Props {
-  imgUrl: string;
+  imgUrl?: string;
   alt: string;
   value: string | number;
   title: string;
@@ -25,13 +26,28 @@ const Metric = ({
 }: Props) => {
   const metricContent = (
     <>
-      <Image
-        src={imgUrl}
-        width={16}
-        height={16}
-        alt={alt}
-        className={`rounded-full object-contain ${imgStyles}`}
-      />
+      {imgUrl ? (
+        <Image
+          src={imgUrl}
+          width={16}
+          height={16}
+          alt={alt}
+          className={`rounded-full object-contain ${imgStyles}`}
+        />
+      ) : (
+        <Avatar className="size-4">
+          <AvatarFallback className="bg-primary-500 text-[8px] font-bold text-white">
+            {alt
+              ? alt
+                  .split(" ")
+                  .map((word) => word[0])
+                  .join("")
+                  .toUpperCase()
+                  .slice(0, 2)
+              : "??"}
+          </AvatarFallback>
+        </Avatar>
+      )}
 
       <p className={`${textStyles} flex items-center gap-1`}>
         {value}

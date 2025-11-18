@@ -1,6 +1,7 @@
 import { techMap } from "@/constants/techMap";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { date } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -14,7 +15,8 @@ export const devIconClassName = (techName: string) => {
     : "devicon-devicon-plain";
 };
 
-export const getTimestamb = (date: Date): string => {
+export const getTimestamb = (createdAt: Date): string => {
+  const date = new Date(createdAt);
   const now = Date.now();
   const then = date.getTime();
   const diffSec = Math.floor((now - then) / 1000);
