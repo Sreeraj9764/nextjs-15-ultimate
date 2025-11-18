@@ -1,4 +1,3 @@
-import { auth, signOut } from "@/auth";
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import HomeFilter from "@/components/filters/HomeFilter";
@@ -7,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
 import { EMPTY_QUESTIONS } from "@/constants/states";
 import { getQuestiones } from "@/lib/actions/question.action";
-import { ValidationError } from "@/lib/http-errors";
 import logger from "@/lib/logger";
 import Link from "next/link";
 
@@ -57,36 +55,14 @@ const Home = async ({ searchParams }: SearchParams) => {
         error={error}
         data={questiones}
         empty={EMPTY_QUESTIONS}
-        render={(questiones) =>
-          questiones.map((question) => (
-            <QuestionCard key={question._id} question={question} />
-          ))
-        }
-      />
-      {/* {success ? (
-        <div className="mt-10 flex flex-col w-full gap-6">
-          {questiones && questiones.length > 0 ? (
-            questiones.map((question) => (
+        render={(questiones) => (
+          <div className="mt-10 flex w-full flex-col gap-6">
+            {questiones.map((question) => (
               <QuestionCard key={question._id} question={question} />
-            ))
-          ) : (
-            <div className="mt-10 flex w-full items-center justify-center">
-              <p className="text-dark400_light700">
-                {" "}
-                {error instanceof ValidationError
-                  ? error.message
-                  : "No questions found."}
-              </p>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="mat-20 flex w-full items-center justify-center">
-          <p className="text-dark400_light800">
-            {error?.message || "Failed to load questions."}
-          </p>
-        </div>
-      )} */}
+            ))}
+          </div>
+        )}
+      />
     </>
   );
 };
