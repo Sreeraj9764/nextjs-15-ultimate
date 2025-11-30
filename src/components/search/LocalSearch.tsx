@@ -4,34 +4,38 @@ import { Input } from "../ui/input";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { formUrlQuery, removeUrlQuery } from "@/lib/url";
-import useDebounce  from "@/hooks/useDebounce"; 
+import useDebounce from "@/hooks/useDebounce";
 import { useQueryState } from "nuqs";
 interface Props {
   imgSrc?: string;
   placeholder?: string;
   otherClassName?: string;
   route: string;
+  iconPosition?: "left" | "right";
+  otherClasses?: string;
 }
 
-const LocalSearch = ({ imgSrc, placeholder, otherClassName, route }: Props) => {
+const LocalSearch = ({
+  imgSrc,
+  placeholder,
+  otherClassName,
+  iconPosition = "left",
+  otherClasses,
+}: Props) => {
   // const router = useRouter();
   // const pathName = usePathname();
   // const searchParams = useSearchParams();
   // const query = searchParams.get("query") || "";
   const [inputValue, setInputValue] = useState("");
-const [_, setQuery] = useQueryState('query',{
-  defaultValue: '',
-  shallow: false,
-}
-
-)
+  const [_, setQuery] = useQueryState("query", {
+    defaultValue: "",
+    shallow: false,
+  });
   const debouncedSearchQuery = useDebounce(inputValue, 500);
 
   useEffect(() => {
-      setQuery(debouncedSearchQuery)
+    setQuery(debouncedSearchQuery);
   }, [debouncedSearchQuery, setQuery]);
-
-
 
   // useEffect(() => {
   //   const debounceFunction = setTimeout(() => {
@@ -58,8 +62,8 @@ const [_, setQuery] = useQueryState('query',{
 
   return (
     <div
-      className="background-light800_darkgradient flex min-h-[56px]
-    grow items-center gap-4 rounded-[10px] px-4"
+      className={`background-light800_darkgradient flex min-h-[56px]
+    grow items-center gap-4 rounded-[10px] px-4 ${otherClasses}`}
     >
       {imgSrc && (
         <Image
@@ -67,7 +71,7 @@ const [_, setQuery] = useQueryState('query',{
           alt="search"
           height={24}
           width={24}
-          className="cursor-pointer"
+          className={`cursor-pointer object-contain ${iconPosition === "left" ? "order-first" : "order-last"}`}
         />
       )}
       <Input
